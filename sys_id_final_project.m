@@ -7,7 +7,7 @@ rb_sys_id_long = rosbag('20211028_sysid_longitudinal.bag'); % For Longitudinal D
 rb_sys_id_yaw  = rosbag('20211028_sysid_yaw_heave.bag'); % For Heave
 
 %  Reading relevant messages
-read_bag = rb_sys_id_yaw;
+read_bag = rb_orient_test;
 
 mess_data_imu       = select(read_bag,'Topic','/mavros/imu/data');
 mess_data_onbrd_vel = select(read_bag,'Topic','/mavros/local_position/velocity_body');
@@ -128,7 +128,7 @@ data_output_pitch_angle = EUL(:,2);
 
 % HEAVE
 data_output_heave = data_onbrd_lin_vel(0.5*end:end,3);
-m = 1.075;
+m = 1.155;
 g = 9.81;
 F_thrust = -m*g/425*(data_input_heave - 1000);
 F_tilde = F_thrust - (-m*g);
