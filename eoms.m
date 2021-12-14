@@ -20,14 +20,14 @@ om_BI = [p; q; r];
 Cd_F = [Cd_u Cd_v Cd_w];
 Cd_M = [Cd_p Cd_q Cd_r];
 
-F_aero = -f_thrust*Cd_F*vel_B + f_thrust*[0;0;-1];
+F_aero = -f_thrust*Cd_F.'.*vel_B + f_thrust*[0;0;-1];
 F_g = m*g*[0;0;1];
 
 I = [Ixx 0 0;
      0 Iyy 0;
      0 0 Izz];
 
-M_aero = [tau_roll; tau_pitch; tau_yaw] + -[Cd_p Cd_q Cd_r]*om_BI;
+M_aero = [tau_roll; tau_pitch; tau_yaw] + -Cd_M.'.*om_BI;
 
 x_dot = R_BI*vel_B
 v_dot = 1/m*(R_BI.'*F_g + F_aero) - skew(om_BI)*vel_B

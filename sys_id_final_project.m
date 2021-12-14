@@ -2,12 +2,12 @@
 clear; close all; clc;
 
 % Collecting Data
-rb_orient_test = rosbag('20211012_orientationctrl_test.bag');
-rb_sys_id_long = rosbag('20211028_sysid_longitudinal.bag');
-rb_sys_id_yaw  = rosbag('20211028_sysid_yaw_heave.bag');
+rb_orient_test = rosbag('20211012_orientationctrl_test.bag'); % For Lateral Data
+rb_sys_id_long = rosbag('20211028_sysid_longitudinal.bag'); % For Longitudinal Data
+rb_sys_id_yaw  = rosbag('20211028_sysid_yaw_heave.bag'); % For Heave
 
 %  Reading relevant messages
-read_bag = rb_orient_test;
+read_bag = rb_sys_id_yaw;
 
 mess_data_imu       = select(read_bag,'Topic','/mavros/imu/data');
 mess_data_onbrd_vel = select(read_bag,'Topic','/mavros/local_position/velocity_body');
@@ -97,7 +97,7 @@ data_input_thrt    = interp1(data_input_time, data_input_thrt, time_interp, 'spl
 data_input_roll    = interp1(data_input_time, data_input_roll, time_interp, 'spline').';
 data_input_pitch   = interp1(data_input_time, data_input_pitch, time_interp, 'spline').';
 data_input_yaw     = interp1(data_input_time, data_input_yaw, time_interp, 'spline').';
-data_input_heave   = data_input_yaw(0.5*end:end);
+data_input_heave   = data_input_thrt(0.5*end:end);
 data_input_yaw     = data_input_yaw(1:0.5*end);
 
 % Outputs:
@@ -105,38 +105,33 @@ data_onbrd_ang_vel = interp1(data_onbrd_time, data_onbrd_ang_vel, time_interp, '
 data_onbrd_lin_vel = interp1(data_onbrd_time, data_onbrd_lin_vel, time_interp, 'spline');
 
 data_imu_orientation = interp1(data_imu_time, data_imu_orientation, time_interp, 'spline');
+data_gt_orientation = interp1(data_gt_time, data_gt_orientation, time_interp, 'spline');
 data_imu_ang_vel = interp1(data_imu_time, data_imu_ang_vel, time_interp, 'spline');
 data_imu_lin_vel = interp1(data_imu_time, data_imu_lin_vel, time_interp, 'spline');
 
 EUL = quat2eul(data_imu_orientation);
+EUL_gt = quat2eul(data_gt_orientation);
 
 % ROLL
 data_input_roll;
+Phi_d = (data_input_roll - 1489)*pi/(16*180);
 data_output_roll_lat_vel = -data_onbrd_lin_vel(:,2);
 data_output_roll_angle = EUL(:,3);
+data_output_roll_angle_gt = EUL_gt(:,3);
 
 % PITCH
 data_input_pitch;
+Theta_d = (data_input_pitch - 1489)*pi/(16*180);
 data_output_pitch_lon_vel = data_onbrd_lin_vel(:,1);
 data_output_pitch_angle = EUL(:,2);
 
-t_start = 1000;
-t_stop = 4500;
-chop = 12;
 
-data_input_roll_trim = data_input_roll((t_start + chop):(t_stop + chop));
-% data_input_roll_trim(1:12) = []
-%
-figure
-hold on
-Theta_d = (data_input_roll_trim - 1489)*pi/(17*180);
-
-plot(data_output_roll_angle(t_start:t_stop),'b')
-plot(Theta_d,'r')
-
-
-input_roll_chop = data_input_roll_trim;
-output_roll_chop = data_output_roll_angle(t_start:t_stop);
+% HEAVE
+data_output_heave = data_onbrd_lin_vel(0.5*end:end,3);
+m = 1.075;
+g = 9.81;
+F_thrust = -m*g/425*(data_input_heave - 1000);
+F_tilde = F_thrust - (-m*g);
 
 % Exporting PX4 Controller Vairables
 target_act = select(read_bag,'Topic','/mavros/target_actuator_control');
@@ -158,9 +153,9 @@ data_input_target_act_yaw   = interp1(target_act_time, target_act_data(:,3), tim
 data_input_target_act_heave = interp1(target_act_time, target_act_data(:,4), time_interp, 'spline').';
 
 
-
-figure
-plot(data_input_target_act_roll)
+% 
+% figure
+% plot(data_input_target_act_roll)
 
 
 % Starting System ID Assignment
