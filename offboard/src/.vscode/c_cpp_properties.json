@@ -1,0 +1,37 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/nathan/Workspaces/788m/devel/include/**",
+        "/home/nathan/Workspaces/cdcl/devel/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/devel/include/**",
+        "/home/nathan/Workspaces/magicc/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/cdc-scripts/include/**",
+        "/home/nathan/Workspaces/788m/src/mavros/libmavconn/include/**",
+        "/home/nathan/Workspaces/788m/src/mavros/mavros/include/**",
+        "/home/nathan/Workspaces/788m/src/mavros/mavros_msgs/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/octomap_rviz_plugins/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/realsense-ros/realsense2_camera/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/roscopter/roscopter/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/roscopter/roscopter_sim/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/roscopter/roscopter_utils/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/rosflight/rosflight/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/rosflight/rosflight_firmware/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/rosflight_plugins/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/rosflight/rosflight_sim/include/**",
+        "/home/nathan/cross-domain-control/cdc_ws/src/rosflight/rosflight_utils/include/**",
+        "/home/nathan/Workspaces/magicc/src/rosplane/rosplane/include/**",
+        "/home/nathan/Workspaces/magicc/src/rosplane/rosplane_sim/include/**",
+        "/home/nathan/Workspaces/788m/src/mavros/test_mavros/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
